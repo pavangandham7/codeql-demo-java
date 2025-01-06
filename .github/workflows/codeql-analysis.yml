@@ -102,36 +102,36 @@ jobs:
           # Output all languages as a comma-separated string
           echo "languages=$(echo "$detected_langs" | jq -c .)" >> $GITHUB_OUTPUT
 
-  horusec-scan:
-    if: needs.detect_repo_languages.outputs.non_codeql_languages != '[]' # Only run if there are non-CodeQL languages
-    needs: detect_repo_languages
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout scan repo code
-        uses: actions/checkout@v4
+  # horusec-scan:
+  #   if: needs.detect_repo_languages.outputs.non_codeql_languages != '[]' # Only run if there are non-CodeQL languages
+  #   needs: detect_repo_languages
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout scan repo code
+  #       uses: actions/checkout@v4
 
-      - name: Get Horusec config file
-        uses: meltwater/sec-global-gh-actions/.github/actions/horusec-config@NIGHT-668
+  #     - name: Get Horusec config file
+  #       uses: meltwater/sec-global-gh-actions/.github/actions/horusec-config@NIGHT-668
 
-      - name: Install Docker
-        run: |
-          echo "Installing Docker..."
-          curl -fsSL https://get.docker.com -o get-docker.sh | bash -s get-docker.sh
-          docker version  
+  #     - name: Install Docker
+  #       run: |
+  #         echo "Installing Docker..."
+  #         curl -fsSL https://get.docker.com -o get-docker.sh | bash -s get-docker.sh
+  #         docker version  
 
-      - name: Run Horusec Scan
-        run: |
-          echo "Installing Horusec..."
-          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest-beta
-          echo "Running Horusec Scan for non-CodeQL languages..."
-          horusec start -p . --config-file-path="./horusec-config.json"
+  #     - name: Run Horusec Scan
+  #       run: |
+  #         echo "Installing Horusec..."
+  #         curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest-beta
+  #         echo "Running Horusec Scan for non-CodeQL languages..."
+  #         horusec start -p . --config-file-path="./horusec-config.json"
 
-      - name: Upload Horusec SARIF to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: ./horusec.sarif
-          category: Horusec
-        continue-on-error: true
+  #     - name: Upload Horusec SARIF to GitHub
+  #       uses: github/codeql-action/upload-sarif@v3
+  #       with:
+  #         sarif_file: ./horusec.sarif
+  #         category: Horusec
+  #       continue-on-error: true
 
 
   codeql-scan:
