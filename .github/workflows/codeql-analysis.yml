@@ -210,14 +210,3 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{matrix.language}}"
-        continue-on-error: true
-
-  security-post-check:
-    needs:
-      - horusec-scan
-      - codeql-scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: Validate Scans
-        run: |
-          echo "Security check done..."
